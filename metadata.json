@@ -1,0 +1,8 @@
+{
+  "name": "MedGemma Diagnostic Hub",
+  "description": "A high-performance, clinical-grade diagnostic support platform utilizing MedGemma-inspired AI for medical case analysis, differential diagnosis, and clinical decision support.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
