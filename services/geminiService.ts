@@ -13,6 +13,12 @@ export const analyzeMedicalCase = async (patientCase: PatientCase): Promise<Diag
           {
             text: `Analyze this clinical case. Provide a professional medical summary, 3-5 differential diagnoses with probabilities and rationales, a risk assessment, and detailed clinical reasoning. 
             
+            If an image is provided:
+            1. Perform a computer vision analysis to identify anomalies, lesions, fractures, or areas of clinical concern.
+            2. Provide visual annotations for these areas using a [0, 1000] coordinate system.
+            3. Label primary concerns as 'Primary' and secondary areas that require monitoring as 'Secondary'.
+            4. Provide a brief coordinate-based description for each annotation.
+
             Patient: ${patientCase.patient.name}, ${patientCase.patient.age}yo ${patientCase.patient.gender}.
             Medical History: ${patientCase.patient.history}
             Current Symptoms: ${patientCase.symptoms}
@@ -48,7 +54,21 @@ export const analyzeMedicalCase = async (patientCase: PatientCase): Promise<Diag
             }
           },
           riskAssessment: { type: Type.STRING, enum: ["Low", "Moderate", "High", "Critical"] },
-          clinicalReasoning: { type: Type.STRING }
+          clinicalReasoning: { type: Type.STRING },
+          annotations: {
+            type: Type.ARRAY,
+            items: {
+              type: Type.OBJECT,
+              properties: {
+                type: { type: Type.STRING, enum: ["Primary", "Secondary"] },
+                x: { type: Type.NUMBER },
+                y: { type: Type.NUMBER },
+                label: { type: Type.STRING },
+                description: { type: Type.STRING }
+              },
+              required: ["type", "x", "y", "label", "description"]
+            }
+          }
         },
         required: ["summary", "differentials", "riskAssessment", "clinicalReasoning"]
       }

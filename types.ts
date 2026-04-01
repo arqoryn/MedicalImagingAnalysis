@@ -22,12 +22,21 @@ export interface DifferentialDiagnosis {
   recommendedTests: string[];
 }
 
+export interface VisualAnnotation {
+  type: 'Primary' | 'Secondary';
+  x: number; // 0-1000
+  y: number; // 0-1000
+  label: string;
+  description: string;
+}
+
 export interface DiagnosticResult {
   summary: string;
   differentials: DifferentialDiagnosis[];
   riskAssessment: 'Low' | 'Moderate' | 'High' | 'Critical';
   clinicalReasoning: string;
   groundingSources?: { title: string; uri: string }[];
+  annotations?: VisualAnnotation[];
 }
 
 export interface PatientCase {

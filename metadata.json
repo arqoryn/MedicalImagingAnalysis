@@ -1,5 +1,5 @@
 {
-  "name": "MedGemma Diagnostic Hub",
+  "name": "Generative Medical Diagnostic",
   "description": "A high-performance, clinical-grade diagnostic support platform utilizing MedGemma-inspired AI for medical case analysis, differential diagnosis, and clinical decision support.",
   "requestFramePermissions": [
     "camera",
