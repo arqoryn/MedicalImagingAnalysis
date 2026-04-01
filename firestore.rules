@@ -1,0 +1,74 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: cases
+    // Document ID: caseId
+    // Fields:
+    //   - id: string (required)
+    //   - patient: object (required)
+    //   - symptoms: string (required)
+    //   - imagingUrl: string (optional)
+    //   - status: string (required, enum: PENDING, ANALYZING, COMPLETED, ERROR)
+    //   - result: object (optional)
+    //   - error: string (optional)
+    //   - uid: string (required, matches owner)
+    //   - createdAt: string (required, ISO 8601)
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isDocOwner() {
+      return isAuthenticated() && request.auth.uid == resource.data.uid;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+          (request.auth.token.email == "arqoryn@gmail.com" && request.auth.token.email_verified == true));
+    }
+
+    function isValidCase(data) {
+      return data.keys().hasAll(['patient', 'symptoms', 'status', 'uid', 'createdAt']) &&
+             data.patient is map &&
+             data.patient.keys().hasAll(['id', 'name', 'age', 'gender', 'bloodType', 'history']) &&
+             data.patient.id is string && data.patient.id.size() < 50 &&
+             data.patient.name is string && data.patient.name.size() < 100 &&
+             data.patient.age is number &&
+             data.patient.gender in ['Male', 'Female', 'Other'] &&
+             data.patient.bloodType is string && data.patient.bloodType.size() < 10 &&
+             data.patient.history is string && data.patient.history.size() < 2000 &&
+             data.symptoms is string && data.symptoms.size() < 2000 &&
+             data.status in ['PENDING', 'ANALYZING', 'COMPLETED', 'ERROR'] &&
+             data.uid is string && data.uid.size() < 100 &&
+             data.createdAt is string && data.createdAt.size() < 50;
+    }
+
+    match /cases/{caseId} {
+      allow read: if isDocOwner() || isAdmin();
+      allow create: if isAuthenticated() && isValidCase(request.resource.data) && request.resource.data.uid == request.auth.uid;
+      allow update: if (isDocOwner() || isAdmin()) && isValidCase(request.resource.data) && request.resource.data.uid == resource.data.uid;
+      allow delete: if isDocOwner() || isAdmin();
+    }
+
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow create, update: if isAdmin();
+    }
+  }
+}

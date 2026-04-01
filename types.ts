@@ -35,8 +35,16 @@ export interface DiagnosticResult {
   differentials: DifferentialDiagnosis[];
   riskAssessment: 'Low' | 'Moderate' | 'High' | 'Critical';
   clinicalReasoning: string;
+  dietaryRecommendations?: string[];
+  precautions?: string[];
   groundingSources?: { title: string; uri: string }[];
   annotations?: VisualAnnotation[];
+  prognostics?: {
+    treatment: string;
+    successRate: number; // 0-100
+    survivalEstimate: string; // e.g., "5-year: 85%"
+    rationale: string;
+  }[];
 }
 
 export interface PatientCase {
@@ -46,5 +54,7 @@ export interface PatientCase {
   imagingUrl?: string;
   status: DiagnosticStatus;
   result?: DiagnosticResult;
+  error?: string;
+  uid?: string;
   createdAt: string;
 }

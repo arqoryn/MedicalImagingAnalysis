@@ -1,0 +1,50 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+@variant dark (&:where(.dark, .dark *));
+
+body {
+  font-family: var(--font-sans);
+  @apply antialiased;
+}
+
+/* Custom overrides for prose */
+.prose {
+  max-width: none;
+}
+
+.prose h1, .prose h2, .prose h3 {
+  @apply tracking-tight font-bold text-slate-900 dark:text-white;
+}
+
+.prose p, .prose li {
+  @apply text-slate-600 dark:text-slate-400;
+}
+
+.prose strong {
+  @apply font-bold text-slate-900 dark:text-slate-200;
+}
+
+.prose code {
+  @apply bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded font-mono text-sm text-blue-600 dark:text-blue-400 before:content-none after:content-none;
+}
+
+.prose pre {
+  @apply bg-slate-900 dark:bg-black text-slate-200 p-4 rounded-xl mb-4 overflow-x-auto font-mono text-sm border border-slate-800;
+}
+
+.prose table {
+  @apply border-collapse w-full my-6;
+}
+
+.prose th {
+  @apply bg-slate-50 dark:bg-slate-800/50 px-4 py-2 text-left text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider border-b border-slate-200 dark:border-slate-700;
+}
+
+.prose td {
+  @apply px-4 py-2 border-b border-slate-100 dark:border-slate-800 text-sm text-slate-600 dark:text-slate-400;
+}

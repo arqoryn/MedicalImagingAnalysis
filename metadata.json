@@ -1,6 +1,6 @@
 {
-  "name": "Generative Medical Diagnostic",
-  "description": "A high-performance, clinical-grade diagnostic support platform utilizing MedGemma-inspired AI for medical case analysis, differential diagnosis, and clinical decision support.",
+  "name": "Clinical Intelligence Diagnostic Suite",
+  "description": "A high-performance, clinical-grade diagnostic support platform utilizing advanced AI for medical case analysis, differential diagnosis, and clinical decision support.",
   "requestFramePermissions": [
     "camera",
     "microphone"

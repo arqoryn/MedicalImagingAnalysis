@@ -1,0 +1,70 @@
+{
+  "entities": {
+    "PatientCase": {
+      "title": "Patient Case",
+      "description": "A medical diagnostic case for a patient.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "patient": {
+          "type": "object",
+          "properties": {
+            "id": { "type": "string" },
+            "name": { "type": "string" },
+            "age": { "type": "number" },
+            "gender": { "type": "string", "enum": ["Male", "Female", "Other"] },
+            "bloodType": { "type": "string" },
+            "history": { "type": "string" }
+          },
+          "required": ["id", "name", "age", "gender", "bloodType", "history"]
+        },
+        "symptoms": { "type": "string" },
+        "imagingUrl": { "type": "string" },
+        "status": { "type": "string", "enum": ["PENDING", "ANALYZING", "COMPLETED", "ERROR"] },
+        "result": {
+          "type": "object",
+          "properties": {
+            "summary": { "type": "string" },
+            "differentials": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "condition": { "type": "string" },
+                  "probability": { "type": "number" },
+                  "rationale": { "type": "string" },
+                  "recommendedTests": { "type": "array", "items": { "type": "string" } }
+                }
+              }
+            },
+            "riskAssessment": { "type": "string", "enum": ["Low", "Moderate", "High", "Critical"] },
+            "clinicalReasoning": { "type": "string" },
+            "annotations": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type": { "type": "string", "enum": ["Primary", "Secondary"] },
+                  "x": { "type": "number" },
+                  "y": { "type": "number" },
+                  "label": { "type": "string" },
+                  "description": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "error": { "type": "string" },
+        "uid": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["patient", "symptoms", "status", "uid", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/cases/{caseId}": {
+      "schema": "PatientCase",
+      "description": "Collection of patient diagnostic cases."
+    }
+  }
+}
